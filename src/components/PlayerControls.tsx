@@ -19,19 +19,31 @@ function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: P
   const setPlayerRef = useMusicStore((state) => state.setPlayerRef);
   const isRepeat = useMusicStore((state) => state.isRepeat);
   const toggleRepeat = useMusicStore((state) => state.toggleRepeat);
+  const volume = useMusicStore((state) => state.volume);
+  const setVolume = useMusicStore((state) => state.setVolume);
+  const isShuffle = useMusicStore((state) => state.isShuffle);
+  const toggleShuffle = useMusicStore((state) => state.toggleShuffle);
 
 
   const handleReady = (event: { target: any }) => {
-    playerRef.current = event.target;
-    setPlayerRef(event.target);
-    const duration = event.target.getDuration();
-    setDuration(duration);
-    if (isPlaying) {
-      event.target.playVideo();
-    } else {
-      event.target.pauseVideo();
-    }
+    const player = event.target;
+    playerRef.current = player;
+    setPlayerRef(player);
+    setDuration(player.getDuration());
+    player.setVolume(volume); // opcional se estiver usando controle de volume
   };
+
+
+  useEffect(() => {
+    if (!playerRef.current) return;
+
+    if (isPlaying) {
+      playerRef.current.playVideo();
+    } else {
+      playerRef.current.pauseVideo();
+    }
+  }, [isPlaying, playerRef]);
+
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -47,25 +59,40 @@ function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: P
   }, [isPlaying, setProgress]);
 
   const handleToggle = () => {
-    if (!playerRef.current) return;
+    const player = playerRef.current;
+
+    if (!player || typeof player.playVideo !== 'function') {
+      console.warn("YouTube player is not ready yet");
+      return;
+    }
 
     if (isPlaying) {
-      playerRef.current.pauseVideo();
+      player.pauseVideo();
     } else {
-      playerRef.current.playVideo();
+      player.playVideo();
     }
 
     onTogglePlay();
   };
+
 
   const videoId = extractYouTubeId(musicUrl);
 
   return (
     <>
       <div className="flex items-center justify-between px-6 py-4 z-4 gap-6 text-[#B3B3B3]">
-        <Shuffle className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
+        <Shuffle
+          onClick={toggleShuffle}
+          className={`w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848] ${isShuffle ? "text-[#EB4848]" : ""
+            }`}
+        />
+
         <SkipBack onClick={onPrev} className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
-        <FilledPlayButton isPlaying={isPlaying} onToggle={handleToggle} />
+        <FilledPlayButton
+          isPlaying={isPlaying}
+          onToggle={handleToggle}
+          disabled={!playerRef.current}
+        />
         <SkipForward onClick={onNext} className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
         <Repeat
           onClick={toggleRepeat}
@@ -94,10 +121,32 @@ function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: P
         </div>
       )}
 
-      <div className='md:flex items-center justify-between px-6 hidden py-4 z-4 gap-6 text-[#B3B3B3]'>
-        <Volume2 className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
+      <div className="md:flex items-center justify-between px-6 hidden gap-2 py-4 z-4 text-[#B3B3B3]">
+        <div className="group flex items-center gap-2 transition-all duration-500 ease-in-out">
+          <Volume2 className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer" />
+
+          <div
+            className="transition-all duration-700 ease-in-out transform scale-95 opacity-0 max-w-0 overflow-hidden group-hover:scale-100 group-hover:opacity-100 group-hover:max-w-[160px]"
+          >
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={volume}
+              onChange={(e) => setVolume(Number(e.target.value))}
+              className="w-24 md:w-32 mr-2"
+            />
+          </div>
+        </div>
+
         <Maximize className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
       </div>
+
+
+
+
+
+
 
     </>
   );

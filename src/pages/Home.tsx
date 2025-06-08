@@ -16,6 +16,10 @@ function Home() {
   } = useMusicStore();
 
   const currentMusic = musics[currentIndex];
+  const isShuffle = useMusicStore((state) => state.isShuffle);
+  const toggleFavorite = useMusicStore((s) => s.toggleFavorite);
+  const isFavorite = useMusicStore((s) => s.isFavorite);
+
 
   useEffect(() => {
     loadFromStorage();
@@ -30,13 +34,40 @@ function Home() {
     return `${String(mins).padStart(1, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
-  const progressPercent = duration ? (progress / duration) * 100 : 0;
+  useEffect(() => {
+    loadFromStorage();
+
+    return () => {
+      const player = useMusicStore.getState().playerRef;
+
+      // ✅ Verifica se player e métodos existem antes de chamar
+      if (player && typeof player.pauseVideo === 'function') {
+        try {
+          player.pauseVideo();
+          player.seekTo(0);
+        } catch (e) {
+          console.warn("Player not ready to pause/reset", e);
+        }
+      }
+
+      useMusicStore.getState().setIsPlaying(false);
+      useMusicStore.getState().setProgress(0);
+    };
+  }, []);
+
+
 
   const handleNext = () => {
-    setCurrentIndex((currentIndex + 1) % musics.length);
+    if (isShuffle) {
+      const randomIndex = Math.floor(Math.random() * musics.length);
+      setCurrentIndex(randomIndex);
+    } else {
+      setCurrentIndex((currentIndex + 1) % musics.length);
+    }
     setProgress(0);
     setIsPlaying(true);
   };
+
 
   const handlePrev = () => {
     setCurrentIndex((currentIndex - 1 + musics.length) % musics.length);
@@ -89,7 +120,14 @@ function Home() {
       <footer className="bg-[#131313] w-full py-6 pb-6 px-6 flex flex-col lg:flex-row items-center justify-center gap-6">
         <div className="flex max-w-[1430px] justify-between w-full flex-col lg:flex-row">
           <div className="flex items-center gap-8">
-            <Heart className="text-red-500 w-8 h-8 hidden lg:block" />
+            <Heart
+              onClick={() => currentMusic?.id && toggleFavorite(currentMusic.id)}
+              className={`w-8 h-8 hidden lg:block cursor-pointer transition-colors ${currentMusic?.id && isFavorite(currentMusic.id)
+                  ? "text-red-500"
+                  : "text-[#B3B3B3]"
+                } hover:text-red-400`}
+            />
+
             <div className="flex flex-col justify-center">
               <h2 className="font-lexend font-semibold text-[20px] lg:text-[24px] mb-[7px] leading-[100%] tracking-[0%]">
                 {currentMusic?.title || "Nenhuma música"}
