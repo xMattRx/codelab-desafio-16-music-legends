@@ -1,54 +1,113 @@
-# React + TypeScript + Vite
+# 🎵 CodeLab - Desafio 16: Music Legends
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este repositório contém a solução para o **Desafio 16** do curso **CodeLab**, com o projeto **Music Legends**, um player de músicas estilo Spotify, com integração ao YouTube, recursos interativos e persistência local. O foco do desafio está na componentização, controle de estado global e experiência do usuário fluida e responsiva.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧪 Tecnologias utilizadas
 
-## Expanding the ESLint configuration
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Zustand](https://zustand-demo.pmnd.rs/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [React YouTube](https://github.com/tjallingt/react-youtube)
+- [Lucide Icons](https://lucide.dev/)
+- [Vite](https://vitejs.dev/)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 📂 Estrutura do projeto
+
+```
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   │   ├── PlayerControls.tsx
+│   │   ├── FilledPlayButton.tsx
+│   │   └── ProgressBar.tsx
+│   ├── pages/
+│   │   ├── Home.tsx
+│   │   └── Library.tsx
+│   ├── store/
+│   │   └── musicStore.ts
+│   ├── App.tsx
+│   └── main.tsx
+├── tailwind.config.ts
+├── tsconfig.json
+├── package.json
+├── vite.config.ts
+└── README.md
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🚀 Como rodar o projeto localmente
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/codelab-desafio-16-music-legends.git
+   ```
+
+2. Acesse a pasta do projeto:
+   ```bash
+   cd codelab-desafio-16-music-legends
+   ```
+
+3. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+4. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+5. Acesse no navegador:
+   ```
+   http://localhost:5173
+   ```
+
+---
+
+## 📸 Preview
+
+> *(Adicione aqui uma imagem de preview do projeto ou um GIF)*  
+> Exemplo:
+>
+> ![Preview do projeto](./src/assets/preview.png)
+
+---
+
+## 🎯 Funcionalidades
+
+- 🎵 Reprodução de músicas via YouTube embed  
+- ▶️ Botões de play/pause, next e previous  
+- 🔁 Repeat e 🔀 Shuffle com estado global  
+- ❤️ Marcar/desmarcar como favorita (persistência local)  
+- 📶 Controle de volume com animação  
+- 📈 Barra de progresso sincronizada com a música  
+- 💾 Biblioteca de músicas com formulário de adição
+
+---
+
+## 🧠 Aprendizados
+
+- Gerenciamento global de estado com Zustand  
+- Integração com API do YouTube Player  
+- Comportamentos reativos com hooks e useRef  
+- Componentização inteligente e reutilizável  
+- Responsividade com Tailwind CSS  
+- Persistência local usando localStorage
+
+---
+
+## 🕹️ Demonstração
+
+> *(Adicione aqui o link do projeto publicado no Vercel ou outro serviço)*  
+> Exemplo:
+>
+> 🔗 https://codelab-desafio-16-music-legends.vercel.app
+
+---
