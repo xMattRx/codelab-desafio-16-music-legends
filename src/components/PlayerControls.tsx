@@ -1,8 +1,8 @@
 import { Maximize, Repeat, Shuffle, SkipBack, SkipForward, Volume2 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import YouTube from 'react-youtube';
-import FilledPlayButton from './FilledPlayButton';
 import { useMusicStore } from '../store/musicStore';
+import FilledPlayButton from './FilledPlayButton';
 
 interface PlayerControlsProps {
   isPlaying: boolean;
@@ -18,9 +18,19 @@ function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: P
   const setDuration = useMusicStore((state) => state.setDuration);
   const setPlayerRef = useMusicStore((state) => state.setPlayerRef);
 
+  const progress = useMusicStore((state) => state.progress);
+  const duration = useMusicStore((state) => state.duration);
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${String(mins).padStart(1, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
+
   const handleReady = (event: { target: any }) => {
     playerRef.current = event.target;
-    setPlayerRef(event.target); // armazena no zustand
+    setPlayerRef(event.target);
     const duration = event.target.getDuration();
     setDuration(duration);
     if (isPlaying) {
@@ -66,13 +76,19 @@ function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: P
         <SkipForward onClick={onNext} className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
         <Repeat className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
       </div>
+      
 
       {videoId && (
         <div style={{ width: 0, height: 0, overflow: 'hidden' }}>
           <YouTube
             videoId={videoId}
-            opts={{ playerVars: { autoplay: isPlaying ? 1 : 0 } }}
+            opts={{
+              playerVars: {
+                autoplay: isPlaying ? 1 : 0,
+              },
+            }}
             onReady={handleReady}
+            onEnd={onNext}
           />
         </div>
       )}
@@ -81,6 +97,7 @@ function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: P
         <Volume2 className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
         <Maximize className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
       </div>
+      
     </>
   );
 }

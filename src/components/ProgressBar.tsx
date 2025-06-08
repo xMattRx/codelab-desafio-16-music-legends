@@ -56,7 +56,6 @@ function ProgressBar() {
     };
   }, [isDragging, calculateProgress]);
 
-  // Convert tempo atual para porcentagem
   const progressPercent = duration ? (progress / duration) * 100 : 0;
 
   return (
@@ -72,14 +71,16 @@ function ProgressBar() {
       aria-label="Progress"
     >
       <div
-        className="h-1 bg-white rounded-full transition-all duration-100"
+        className="h-1 bg-white rounded-full transition-[width] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
         style={{ width: `${progressPercent}%` }}
       />
 
       <div
-        className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[#EB4848] rounded-full shadow-[0_0_10px_2px_#EB4848] transition-all duration-100 pointer-events-none"
+        className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[#EB4848] rounded-full shadow-[0_0_10px_2px_#EB4848] transition-[left] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] pointer-events-none"
         style={{ left: `calc(${progressPercent}% - 6px)` }}
       />
+
+
     </div>
   );
 }

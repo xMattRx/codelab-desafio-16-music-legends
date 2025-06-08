@@ -9,7 +9,6 @@ function Navbar() {
 
         <ul className="hidden lg:flex items-center gap-12 space-x-6 font-lexend font-normal text-[20px] leading-[100%] tracking-[0%] text-[#FFFFFF]">
           <li><Link to="/">Início</Link></li>
-          <li><Link to="/buscar">Buscar</Link></li>
           <li><Link to="/library">Minha biblioteca</Link></li>
         </ul>
 
@@ -20,7 +19,7 @@ function Navbar() {
 
 
         <div className="flex items-center space-x-6">
-          <Menu />
+          <Menu className="block lg:hidden" />
           <img src="/profile.png" alt="Album" className="w-[32px] h-auto object-cover" />
         </div>
       </div>

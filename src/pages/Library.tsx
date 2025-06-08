@@ -24,11 +24,6 @@ async function fetchYoutubeMetadata(videoId: string) {
   return await response.json();
 }
 
-function convertToEmbedUrl(url: string) {
-  const id = extractYouTubeId(url);
-  return id ? `https://www.youtube.com/embed/${id}` : "";
-}
-
 function Library() {
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const musics = useMusicStore((state) => state.musics);

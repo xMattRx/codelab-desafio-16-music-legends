@@ -21,6 +21,17 @@ function Home() {
     loadFromStorage();
   }, []);
 
+  const progress = useMusicStore((state) => state.progress);
+  const duration = useMusicStore((state) => state.duration);
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${String(mins).padStart(1, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
+  const progressPercent = duration ? (progress / duration) * 100 : 0;
+
   const handleNext = () => {
     setCurrentIndex((currentIndex + 1) % musics.length);
     setProgress(0);
@@ -85,7 +96,7 @@ function Home() {
               </h2>
 
               <p className="font-lexend font-normal text-[16px] lg:text-[18px] leading-[100%] tracking-[0%] uppercase">
-                {currentMusic?.artist || "Artista Desconhecido"}
+                {currentMusic?.artist || "Artista Desconhecido"} - {`${formatTime(progress)} / ${formatTime(duration)}`}
               </p>
             </div>
           </div>
@@ -97,6 +108,7 @@ function Home() {
             onNext={handleNext}
             onPrev={handlePrev}
           />
+
         </div>
       </footer>
     </>
