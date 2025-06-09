@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import PlayerControls from "../components/PlayerControls";
 import ProgressBar from "../components/ProgressBar";
 import { useMusicStore } from "../store/musicStore";
@@ -19,6 +19,7 @@ function Home() {
   const isShuffle = useMusicStore((state) => state.isShuffle);
   const toggleFavorite = useMusicStore((s) => s.toggleFavorite);
   const isFavorite = useMusicStore((s) => s.isFavorite);
+  const containerRef = useRef<HTMLDivElement>(null);
 
 
   useEffect(() => {
@@ -123,8 +124,8 @@ function Home() {
             <Heart
               onClick={() => currentMusic?.id && toggleFavorite(currentMusic.id)}
               className={`w-8 h-8 hidden lg:block cursor-pointer transition-colors ${currentMusic?.id && isFavorite(currentMusic.id)
-                  ? "text-red-500"
-                  : "text-[#B3B3B3]"
+                ? "text-red-500"
+                : "text-[#B3B3B3]"
                 } hover:text-red-400`}
             />
 
@@ -138,14 +139,15 @@ function Home() {
               </p>
             </div>
           </div>
-
           <PlayerControls
             isPlaying={isPlaying}
             onTogglePlay={() => setIsPlaying(!isPlaying)}
             musicUrl={currentMusic?.youtubeUrl || ""}
             onNext={handleNext}
             onPrev={handlePrev}
+            containerRef={containerRef}
           />
+
 
         </div>
       </footer>

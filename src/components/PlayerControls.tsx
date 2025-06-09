@@ -1,5 +1,5 @@
 import { Maximize, Repeat, Shuffle, SkipBack, SkipForward, Volume2 } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import { useMusicStore } from '../store/musicStore';
 import FilledPlayButton from './FilledPlayButton';
@@ -10,9 +10,11 @@ interface PlayerControlsProps {
   musicUrl: string;
   onNext: () => void;
   onPrev: () => void;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: PlayerControlsProps) {
+
+function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev, containerRef }: PlayerControlsProps) {
   const playerRef = useRef<any>(null);
   const setProgress = useMusicStore((state) => state.setProgress);
   const setDuration = useMusicStore((state) => state.setDuration);
@@ -23,6 +25,18 @@ function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: P
   const setVolume = useMusicStore((state) => state.setVolume);
   const isShuffle = useMusicStore((state) => state.isShuffle);
   const toggleShuffle = useMusicStore((state) => state.toggleShuffle);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggleFullscreen = () => {
+    const doc = document as any;
+
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.(); // tela cheia do site todo
+    } else {
+      doc.exitFullscreen?.();
+    }
+  };
+
 
 
   const handleReady = (event: { target: any }) => {
@@ -121,7 +135,10 @@ function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: P
         </div>
       )}
 
-      <div className="md:flex items-center justify-between px-6 hidden gap-2 py-4 z-4 text-[#B3B3B3]">
+      <div
+        className="md:flex items-center justify-between px-6 hidden gap-2 py-4 z-4 text-[#B3B3B3]"
+      >
+
         <div className="group flex items-center gap-2 transition-all duration-500 ease-in-out">
           <Volume2 className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer" />
 
@@ -139,7 +156,11 @@ function PlayerControls({ isPlaying, onTogglePlay, musicUrl, onNext, onPrev }: P
           </div>
         </div>
 
-        <Maximize className="w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848]" />
+        <Maximize
+          onClick={toggleFullscreen}
+          className={`w-6 h-6 lg:w-8 lg:h-8 cursor-pointer hover:text-[#EB4848] ${isFullscreen ? 'opacity-100' : 'opacity-50'}`}
+        />
+
       </div>
 
 
